@@ -1,0 +1,35 @@
+.dynamic-table__container {
+  .ant-pagination {
+    display: flex;
+    justify-content: center;
+
+    & > li {
+      border: none;
+    }
+
+    //Hide Per Page Dropdown
+    .ant-pagination-options {
+      display: none;
+    }
+
+    .ant-pagination-item-link {
+      border: none;
+    }
+
+    .ant-pagination-disabled {
+      display: none;
+    }
+
+    //Override Style For Active Page
+    .ant-pagination-item-active {
+      background-color: var(--color-gray-1);
+      & > a {
+        color: var(--color-gray-2);
+        font-weight: 800;
+      }
+    }
+  }
+  .ant-table-column-sorters > .ant-table-column-sorter{
+    display: none;
+  }
+}

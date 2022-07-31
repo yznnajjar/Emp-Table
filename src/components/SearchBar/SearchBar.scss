@@ -1,0 +1,33 @@
+.search-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  .wd220 {
+    width: 200px;
+    margin-right: 10px;
+    border-radius: 5px !important;
+  }
+  .wd266 {
+    width: 266px;
+  }
+  .search-button {
+    border-radius: 5px;
+    background-color: var(--color-blue-2);
+    font-weight: 500;
+    color: var(--color-white-1) !important;
+    display: flex;
+    align-self: end;
+    & > span {
+      margin: auto;
+    }
+  }
+
+  //Hide Arrow For InputNumber
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
