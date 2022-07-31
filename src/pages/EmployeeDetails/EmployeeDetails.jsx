@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Spin } from "antd";
 import _ from "lodash";
+import moment from "moment";
 //Import Helpers
 import DynamicTable from "../../components/DynamicTable";
 import BreadCrumbComponent from "../../components/Breadcrumb";
@@ -15,6 +16,18 @@ import {capitalizeWord} from '../../lib/helpers/general-helper'
 import useFetch from "../../hooks/useFetch";
 //import Style
 import "./EmployeeDetails.scss";
+
+const extractDataBasedOnDate = (data, fromDate = undefined, toDate = undefined) => {
+  if(!toDate && fromDate){
+    return data.filter(item => moment(item['creationTimestamp'].split(" ")[0]).isSameOrAfter(fromDate));
+  }
+
+  if(!fromDate && toDate){
+    return data.filter(item => moment(item['creationTimestamp'].split(" ")[0]).isSameOrBefore(toDate));
+  }
+
+  return data.filter(item => moment(item['creationTimestamp'].split(" ")[0]).isSameOrAfter(fromDate) && moment(item['creationTimestamp'].split(" ")[0]).isSameOrBefore(toDate));
+};
 
 const EmployeeDetails = () => {
   const [reformattedData, setReformattedData] = useState([]);
@@ -49,11 +62,19 @@ const EmployeeDetails = () => {
     Object.keys(filterData).forEach(key => !filterData[key] && delete filterData[key]);
 
     if(_.isEmpty(filterData)) return;
-    const dataAfterFilter =_.filter(reformattedData, filterData);
+
+    let dataDateFiltered = [];
+    if(FIELDS_KEY_NAMES.FROM_DATE in filterData || FIELDS_KEY_NAMES.TO_DATE in filterData){
+      dataDateFiltered = extractDataBasedOnDate([...reformattedData], filterData[FIELDS_KEY_NAMES.FROM_DATE], filterData[FIELDS_KEY_NAMES.TO_DATE])
+      FIELDS_KEY_NAMES.FROM_DATE in filterData &&  delete filterData[FIELDS_KEY_NAMES.FROM_DATE]
+      FIELDS_KEY_NAMES.TO_DATE in filterData &&  delete filterData[FIELDS_KEY_NAMES.TO_DATE]
+    }
+
+    const dataToFilter = dataDateFiltered.length ? dataDateFiltered : reformattedData;
+    const dataAfterFilter =_.filter(dataToFilter, filterData);
     setFilteredData(dataAfterFilter);
   },[reformattedData]);
 
-  console.log({isSearchButtonClicked, filteredData, reformattedData});
   // Show the loading indicator for API
   if (isLoading) {
     return <Spin />;

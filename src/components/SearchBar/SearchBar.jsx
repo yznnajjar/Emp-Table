@@ -121,7 +121,7 @@ const SearchBar = ({
         <DatePicker
           className="wd220"
           defaultPickerValue={moment(minAndMaxDate.maxDate)}
-          disabledDate={current => !current || current.isAfter(minAndMaxDate.maxDate) || current.isSameOrBefore(minAndMaxDate.minDate) }
+          disabledDate={current => !current || current.isAfter(minAndMaxDate.maxDate) || current.isSameOrBefore(minAndMaxDate.minDate) || current.isSameOrBefore(searchTableData[FIELDS_KEY_NAMES.FROM_DATE]) }
           onChange={(date, dateString) => {
             handleFieldsChange(FIELDS_KEY_NAMES.TO_DATE, dateString);
           }}
