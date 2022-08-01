@@ -24,7 +24,7 @@ const EmployeeDetails = () => {
   const [reformattedData, setReformattedData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isSearchButtonClicked, setIsSearchButtonClick] = useState(false);
-
+  const [isResetClicked, setIsResetClicked] = useState(false);
   const { data, isLoading, error } = useFetch(
     "https://run.mocky.io/v3/a2fbc23e-069e-4ba5-954c-cd910986f40f"
   );
@@ -44,6 +44,11 @@ const EmployeeDetails = () => {
   }, [data]);
 
 
+  useEffect(()=>{
+    if(!data || !isResetClicked) return;
+
+    setReformattedData(data.data.result.auditLog);
+  },[isResetClicked]);
 
   const handleOnSearchLoggerClick = useCallback((filterData)=>{
     setIsSearchButtonClick(true);
@@ -78,6 +83,8 @@ const EmployeeDetails = () => {
           handleOnSearchLoggerClick={handleOnSearchLoggerClick}
           tableData={reformattedData}
           setFilteredData={setFilteredData}
+          setIsResetClicked={setIsResetClicked}
+          setIsSearchButtonClick={setIsSearchButtonClick}
       />
       <DynamicTable
         columns={employeeDetailsColumns}

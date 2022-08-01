@@ -77,4 +77,5 @@ export const FIELDS_LABELS = {
   TO_DATE: "To Date",
   ACTION_TYPE: "Action Type",
   SEARCH_LOGGER: "Search Logger",
+  RESET_FILTER: "Reset Filter",
 };

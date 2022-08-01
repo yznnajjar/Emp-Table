@@ -7,9 +7,19 @@ import {FIELDS_KEY_NAMES, FIELDS_LABELS} from '../../constants/EmployeeTable'
 //import Style
 import "./SearchBar.scss";
 
+const initialState = {
+  [FIELDS_KEY_NAMES.EMPLOYEE_NAME]: "",
+  [FIELDS_KEY_NAMES.APPLICATION_TYPE]: "",
+  [FIELDS_KEY_NAMES.APPLICATION_ID]: "",
+  [FIELDS_KEY_NAMES.FROM_DATE]: "",
+  [FIELDS_KEY_NAMES.TO_DATE]: "",
+  [FIELDS_KEY_NAMES.ACTION_TYPE]: "",
+};
+
 const SearchBar = ({
   tableData = [],
-  handleOnSearchLoggerClick=() =>{}
+  handleOnSearchLoggerClick = () => {},
+  ...rest
 }) => {
   const [applicationTypeData, setApplicationTypeData] = useState([]);
   const [actionTypeData, setActionTypeData] = useState([]);
@@ -17,16 +27,7 @@ const SearchBar = ({
     minDate:"",
     maxDate:""
   });
-
-  const [searchTableData, setSearchTableData] = useState({
-    [FIELDS_KEY_NAMES.EMPLOYEE_NAME]: "",
-    [FIELDS_KEY_NAMES.APPLICATION_TYPE]: "",
-    [FIELDS_KEY_NAMES.APPLICATION_ID]: "",
-    [FIELDS_KEY_NAMES.FROM_DATE]: "",
-    [FIELDS_KEY_NAMES.TO_DATE]: "",
-    [FIELDS_KEY_NAMES.ACTION_TYPE]: "",
-
-  });
+  const [searchTableData, setSearchTableData] = useState(initialState);
 
   const handleFieldsChange = useCallback((key, value) => {
     setSearchTableData({...searchTableData, [key]: value});
@@ -67,6 +68,11 @@ const SearchBar = ({
       returnKeysActionType.length &&  setActionTypeData([...returnKeysActionType]);
   },[tableData]);
 
+  const handleResetClick = useCallback(()=>{
+    rest.setIsSearchButtonClick(false);
+    rest.setIsResetClicked(true);
+    setSearchTableData({ ...initialState });
+  },[]);
 
   return (
     <div className="search-bar">
@@ -90,6 +96,7 @@ const SearchBar = ({
         <Select
           className="wd220"
           showSearch
+          value={searchTableData[FIELDS_KEY_NAMES.ACTION_TYPE]}
           onChange={value=> handleFieldsChange(FIELDS_KEY_NAMES.ACTION_TYPE, value)}
           options={actionTypeData}
         ></Select>
@@ -99,6 +106,7 @@ const SearchBar = ({
         <Select
           className="wd220"
           showSearch
+          value={searchTableData[FIELDS_KEY_NAMES.APPLICATION_TYPE]}
           onChange={value=> handleFieldsChange(FIELDS_KEY_NAMES.APPLICATION_TYPE, value)}
           options={applicationTypeData}
         ></Select>
@@ -114,6 +122,8 @@ const SearchBar = ({
           onChange={(date, dateString) => {
             handleFieldsChange(FIELDS_KEY_NAMES.FROM_DATE, dateString);
           }}
+          value={searchTableData[FIELDS_KEY_NAMES.FROM_DATE] && moment(searchTableData[FIELDS_KEY_NAMES.FROM_DATE])}
+
         />
       </div>
       <div>
@@ -127,6 +137,7 @@ const SearchBar = ({
           onChange={(date, dateString) => {
             handleFieldsChange(FIELDS_KEY_NAMES.TO_DATE, dateString);
           }}
+          value={searchTableData[FIELDS_KEY_NAMES.TO_DATE] && moment(searchTableData[FIELDS_KEY_NAMES.TO_DATE])}
         />
       </div>
       {/* Application ID Field */}
@@ -134,6 +145,7 @@ const SearchBar = ({
         <span>{FIELDS_LABELS.APPLICATION_ID}</span>
         <Input
           type="number"
+          value={searchTableData[FIELDS_KEY_NAMES.APPLICATION_ID]}
           className="wd220"
           placeholder="e.g. 219841/2021"
           min={0}
@@ -145,7 +157,16 @@ const SearchBar = ({
       </div>
       <Button
         className="search-button wd266"
-        onClick={()=> handleOnSearchLoggerClick(searchTableData)}>{FIELDS_LABELS.SEARCH_LOGGER}</Button>
+        onClick={()=> handleOnSearchLoggerClick(searchTableData)}
+      >
+        {FIELDS_LABELS.SEARCH_LOGGER}
+      </Button>
+      <Button
+        className="search-button wd266"
+        onClick={handleResetClick}
+      >
+        {FIELDS_LABELS.RESET_FILTER}
+      </Button>
     </div>
   );
 };
